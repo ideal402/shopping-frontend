@@ -20,6 +20,7 @@ const RegisterPage = () => {
   const [passwordError, setPasswordError] = useState("");
   const [policyError, setPolicyError] = useState(false);
   const { registrationError } = useSelector((state) => state.user);
+  const [loading, setLoading] = useState(false);
 
   const register = (event) => {
     event.preventDefault();
@@ -35,7 +36,9 @@ const RegisterPage = () => {
     }
     setPasswordError("");
     setPolicyError(false);
+    setLoading(true);
     dispatch(registerUser({ name, email, password, navigate }));
+    setLoading(false);
   };
 
   const handleChange = (event) => {
@@ -113,7 +116,11 @@ const RegisterPage = () => {
             isInvalid={policyError}
           />
         </Form.Group>
-        <Button variant="danger" type="submit">
+        <Button variant="danger"
+          type="submit"
+          disabled={loading} 
+          className={loading ? "loading-button" : ""}
+        >
           회원가입
         </Button>
       </Form>
