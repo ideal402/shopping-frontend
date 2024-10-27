@@ -119,6 +119,10 @@ const userSlice = createSlice({
       })
       .addCase(loginWithToken.fulfilled, (state, action) => {
         state.user = action.payload.user;
+      })
+      .addCase(loginWithToken.rejected, (state) => {
+        state.user = null;
+        sessionStorage.removeItem("token");
       });
   },
 });
