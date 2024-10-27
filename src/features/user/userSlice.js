@@ -27,7 +27,10 @@ export const loginWithGoogle = createAsyncThunk(
   async (token, { rejectWithValue }) => {}
 );
 
-export const logout = () => (dispatch) => {};
+export const logout = () => (dispatch) => {
+  sessionStorage.removeItem("token");
+  window.location.reload();
+};
 export const registerUser = createAsyncThunk(
   "user/registerUser",
   async (
