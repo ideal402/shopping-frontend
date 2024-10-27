@@ -7,14 +7,16 @@ import { initialCart } from "../cart/cartSlice";
 export const loginWithEmail = createAsyncThunk(
   "user/loginWithEmail",
   async ({ email, password }, { rejectWithValue }) => {
-    try{
+    try {
       const response = await api.post("/auth/login", {
         email,
         password,
       });
 
-      return response.data
-    }catch(error){
+      sessionStorage.setItem("token", response.data.token);
+
+      return response.data;
+    } catch (error) {
       return rejectWithValue(error.error);
     }
   }
@@ -63,7 +65,14 @@ export const registerUser = createAsyncThunk(
 
 export const loginWithToken = createAsyncThunk(
   "user/loginWithToken",
-  async (_, { rejectWithValue }) => {}
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await api.get("/user/me");
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.error);
+    }
+  }
 );
 
 const userSlice = createSlice({
@@ -93,18 +102,21 @@ const userSlice = createSlice({
       .addCase(registerUser.rejected, (state, action) => {
         state.registrationError = action.payload;
       })
-      .addCase(loginWithEmail.pending, (state)=>{
+      .addCase(loginWithEmail.pending, (state) => {
         state.loading = true;
       })
-      .addCase(loginWithEmail.fulfilled, (state, action)=>{
+      .addCase(loginWithEmail.fulfilled, (state, action) => {
         state.loading = false;
         state.user = action.payload.user;
         state.loginError = null;
       })
-      .addCase(loginWithEmail.rejected, (state, action)=>{
+      .addCase(loginWithEmail.rejected, (state, action) => {
         state.loading = false;
-        state.loginError = action.payload; 
+        state.loginError = action.payload;
       })
+      .addCase(loginWithToken.fulfilled, (state, action) => {
+        state.user = action.payload.user;
+      });
   },
 });
 export const { clearErrors } = userSlice.actions;
