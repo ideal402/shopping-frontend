@@ -27,7 +27,10 @@ export const loginWithGoogle = createAsyncThunk(
   async (token, { rejectWithValue }) => {}
 );
 
-export const logout = () => (dispatch) => {};
+export const logout = () => (dispatch) => {
+  sessionStorage.removeItem("token");
+  window.location.reload();
+};
 export const registerUser = createAsyncThunk(
   "user/registerUser",
   async (
@@ -116,6 +119,10 @@ const userSlice = createSlice({
       })
       .addCase(loginWithToken.fulfilled, (state, action) => {
         state.user = action.payload.user;
+      })
+      .addCase(loginWithToken.rejected, (state) => {
+        state.user = null;
+        sessionStorage.removeItem("token");
       });
   },
 });
