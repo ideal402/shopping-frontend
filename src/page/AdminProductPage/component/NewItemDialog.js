@@ -33,7 +33,10 @@ const NewItemDialog = ({ mode, showDialog, setShowDialog }) => {
   const [stockError, setStockError] = useState(false);
 
   useEffect(() => {
-    if (success) setShowDialog(false);
+    if (success) {
+      setShowDialog(false);
+      Navigate("/admin/product");
+    }
   }, [success]);
 
   useEffect(() => {
