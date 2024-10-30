@@ -35,7 +35,6 @@ const NewItemDialog = ({ mode, showDialog, setShowDialog }) => {
   useEffect(() => {
     if (success) {
       setShowDialog(false);
-      Navigate("/admin/product");
     }
   }, [success]);
 
