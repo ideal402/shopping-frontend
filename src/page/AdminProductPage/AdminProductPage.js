@@ -16,7 +16,7 @@ const AdminProductPage = () => {
   const navigate = useNavigate();
   const [query] = useSearchParams();
   const dispatch = useDispatch();
-  const { productList, totalPageNum, success } = useSelector((state) => state.product);
+  const { productList, totalPageNum } = useSelector((state) => state.product);
   const [showDialog, setShowDialog] = useState(false);
   const [searchQuery, setSearchQuery] = useState({
     page: query.get("page") || 1,
@@ -39,7 +39,7 @@ const AdminProductPage = () => {
   //상품리스트 가져오기 (url쿼리 맞춰서)
   useEffect(() => {
     dispatch(getProductList({...searchQuery}));
-  }, [query, success]);
+  }, [query]);
 
   useEffect(() => {
     if(searchQuery.name === ""){
@@ -55,8 +55,9 @@ const AdminProductPage = () => {
   };
 
   const openEditForm = (product) => {
-    //edit모드로 설정하고
-    // 아이템 수정다이얼로그 열어주기
+    setMode("edit");
+    dispatch(setSelectedProduct(product));
+    setShowDialog(true);
   };
 
   const handleClickNewItem = () => {
