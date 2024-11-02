@@ -12,6 +12,7 @@ import LoadingSpinner from "../../common/component/LoadingSpinner";
 const ProductDetail = () => {
   const dispatch = useDispatch();
   const { selectedProduct, loading } = useSelector((state) => state.product);
+  const {cartLoading} = useSelector((state) => state.cart.loading);
   const [size, setSize] = useState("");
   const { id } = useParams();
   const [sizeError, setSizeError] = useState(false);
@@ -51,9 +52,9 @@ const ProductDetail = () => {
     );
   return (
     <Container className="product-detail-card">
-      {loading ? (
+      {loading || cartLoading? (
         <LoadingSpinner />
-      ) : (
+      ) : (<></>)}
         <Row>
           <Col sm={6}>
             <img src={selectedProduct.image} className="w-100" alt="image" />
@@ -111,7 +112,6 @@ const ProductDetail = () => {
             </Button>
           </Col>
         </Row>
-      )}
     </Container>
   );
 };
