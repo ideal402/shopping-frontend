@@ -12,8 +12,7 @@ import { getCartQty } from "../features/cart/cartSlice";
 const AppLayout = ({ children }) => {
   const location = useLocation();
   const dispatch = useDispatch();
-  const loadingCount = useSelector((state) => state.ui.loadingCount);
-  const { user } = useSelector((state) => state.user);
+  const { user, loading } = useSelector((state) => state.user);
 
   useEffect(() => {
     dispatch(loginWithToken());
@@ -28,7 +27,7 @@ const AppLayout = ({ children }) => {
   return (
     <div>
       <ToastMessage />
-      {loadingCount > 0 && <LoadingSpinner />}
+      {loading && <LoadingSpinner />}
       {location.pathname.includes("admin") ? (
         <Row className="vh-100">
           <Col xs={12} md={3} className="sidebar mobile-sidebar">

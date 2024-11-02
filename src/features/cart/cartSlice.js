@@ -18,6 +18,7 @@ export const addToCart = createAsyncThunk(
     try {
       const response = await api.post("/cart", { productId: id, size, qty: 1 });
       if (response.status !== 200) throw new Error(response.error);
+      console.log("🚀 ~ response:", response.data.cartItemQty)
 
       dispatch(
         showToastMessage({
@@ -25,7 +26,7 @@ export const addToCart = createAsyncThunk(
           status: "success",
         })
       );
-
+      
       return response.data.cartItemQty;
     } catch (error) {
       dispatch(
@@ -39,7 +40,7 @@ export const addToCart = createAsyncThunk(
     }
   }
 );
-
+      
 export const getCartList = createAsyncThunk(
   "cart/getCartList",
   async (_, { rejectWithValue, dispatch }) => {}
@@ -77,7 +78,7 @@ const cartSlice = createSlice({
       .addCase(addToCart.fulfilled, (state,action) => {
         state.loading = false;
         state.error = "";
-        state.cartItemCount = action.payload
+        state.cartItemCount = action.payload;
       })
       .addCase(addToCart.rejected, (state, action) => {
         state.loading = false;
