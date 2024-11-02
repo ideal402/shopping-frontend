@@ -6,6 +6,7 @@ import ReactPaginate from "react-paginate";
 import SearchBox from "../../common/component/SearchBox";
 import NewItemDialog from "./component/NewItemDialog";
 import ProductTable from "./component/ProductTable";
+import LoadingSpinner from "../../common/component/LoadingSpinner";
 import {
   getProductList,
   deleteProduct,
@@ -16,7 +17,7 @@ const AdminProductPage = () => {
   const navigate = useNavigate();
   const [query] = useSearchParams();
   const dispatch = useDispatch();
-  const { productList, totalPageNum } = useSelector((state) => state.product);
+  const { productList, totalPageNum, loading } = useSelector((state) => state.product);
   const [showDialog, setShowDialog] = useState(false);
   const [searchQuery, setSearchQuery] = useState({
     page: query.get("page") || 1,
@@ -72,45 +73,51 @@ const AdminProductPage = () => {
   return (
     <div className="locate-center">
       <Container>
-        <div className="mt-2">
-          <SearchBox
-            searchQuery={searchQuery}
-            setSearchQuery={setSearchQuery}
-            placeholder="제품 이름으로 검색"
-            field="name"
-          />
-        </div>
-        <Button className="mt-2 mb-2" onClick={handleClickNewItem}>
-          Add New Item +
-        </Button>
+        {loading ? ( // 로딩 상태에 따른 조건부 렌더링
+          <LoadingSpinner />
+        ) : (
+          <>
+            <div className="mt-2">
+              <SearchBox
+                searchQuery={searchQuery}
+                setSearchQuery={setSearchQuery}
+                placeholder="제품 이름으로 검색"
+                field="name"
+              />
+            </div>
+            <Button className="mt-2 mb-2" onClick={handleClickNewItem}>
+              Add New Item +
+            </Button>
 
-        <ProductTable
-          header={tableHeader}
-          data={productList}
-          deleteItem={deleteItem}
-          openEditForm={openEditForm}
-        />
-        <ReactPaginate
-          nextLabel="next >"
-          onPageChange={handlePageClick}
-          pageRangeDisplayed={5}
-          pageCount={totalPageNum}
-          forcePage={searchQuery.page - 1}
-          previousLabel="< previous"
-          renderOnZeroPageCount={null}
-          pageClassName="page-item"
-          pageLinkClassName="page-link"
-          previousClassName="page-item"
-          previousLinkClassName="page-link"
-          nextClassName="page-item"
-          nextLinkClassName="page-link"
-          breakLabel="..."
-          breakClassName="page-item"
-          breakLinkClassName="page-link"
-          containerClassName="pagination"
-          activeClassName="active"
-          className="display-center list-style-none"
-        />
+            <ProductTable
+              header={tableHeader}
+              data={productList}
+              deleteItem={deleteItem}
+              openEditForm={openEditForm}
+            />
+            <ReactPaginate
+              nextLabel="next >"
+              onPageChange={handlePageClick}
+              pageRangeDisplayed={5}
+              pageCount={totalPageNum}
+              forcePage={searchQuery.page - 1}
+              previousLabel="< previous"
+              renderOnZeroPageCount={null}
+              pageClassName="page-item"
+              pageLinkClassName="page-link"
+              previousClassName="page-item"
+              previousLinkClassName="page-link"
+              nextClassName="page-item"
+              nextLinkClassName="page-link"
+              breakLabel="..."
+              breakClassName="page-item"
+              breakLinkClassName="page-link"
+              containerClassName="pagination"
+              activeClassName="active"
+              className="display-center list-style-none"
+            />
+          </>
+        )}
       </Container>
 
       <NewItemDialog

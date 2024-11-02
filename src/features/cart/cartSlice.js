@@ -18,7 +18,7 @@ export const addToCart = createAsyncThunk(
     try {
       const response = await api.post("/cart", { productId: id, size, qty: 1 });
       if (response.status !== 200) throw new Error(response.error);
-      console.log("🚀 ~ response:", response.data.cartItemQty)
+      console.log("🚀 ~ response:", response.data.cartItemsQty)
 
       dispatch(
         showToastMessage({
@@ -27,7 +27,7 @@ export const addToCart = createAsyncThunk(
         })
       );
       
-      return response.data.cartItemQty;
+      return response.data.cartItemsQty;
     } catch (error) {
       dispatch(
         showToastMessage({
