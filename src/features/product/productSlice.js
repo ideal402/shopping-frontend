@@ -8,6 +8,7 @@ export const getProductList = createAsyncThunk(
   async (query, { rejectWithValue }) => {
     try {
       const response = await api.get("/product", { params: { ...query } });
+      console.log("🚀 ~ response:", response)
       if (response.status !== 200) throw new Error(response.error);
 
       return response.data;
@@ -19,7 +20,18 @@ export const getProductList = createAsyncThunk(
 
 export const getProductDetail = createAsyncThunk(
   "products/getProductDetail",
-  async (id, { rejectWithValue }) => {}
+  async (id, { rejectWithValue }) => {
+    try {
+      const response = await api.get(`/product/${id}`);
+
+      if (response.status !== 200) throw new Error(response.error);
+
+      return response.data.data
+      
+    } catch (error) {
+      rejectWithValue(error.error);
+    }
+  }
 );
 
 export const createProduct = createAsyncThunk(
@@ -27,6 +39,7 @@ export const createProduct = createAsyncThunk(
   async (formData, { dispatch, rejectWithValue }) => {
     try {
       const response = await api.post("/product", formData);
+
       if (response.status !== 200) throw new Error(response.error);
       dispatch(
         showToastMessage({ message: "상품생성 성공", status: "success" })
@@ -45,7 +58,6 @@ export const deleteProduct = createAsyncThunk(
     try {
       const response = await api.delete(`/product/${id}`);
 
-      console.log("🚀 ~ response:", response);
       if (response.status !== 200) {
         throw new Error(response.error);
       }
@@ -162,6 +174,18 @@ const productSlice = createSlice({
         state.success = false;
         state.error = action.payload;
       })
+      .addCase(getProductDetail.pending, (state) =>{
+        state.loading = true;
+      })
+      .addCase(getProductDetail.fulfilled, (state, action) =>{
+        state.loading = false;
+        state.error = "";
+        state.selectedProduct = action.payload;
+      })
+      .addCase(getProductDetail.rejected, (state, action) =>{
+        state.loading = false;
+        state.error = action.payload;
+      });
       ;
   },
 });
