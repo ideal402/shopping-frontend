@@ -7,7 +7,7 @@ import { currencyFormat } from "../../utils/number";
 import "./style/productDetail.style.css";
 import { getProductDetail } from "../../features/product/productSlice";
 import { addToCart } from "../../features/cart/cartSlice";
-import LoadingSpinner from "../../common/component/LoadingSpinner";
+
 
 const ProductDetail = () => {
   const dispatch = useDispatch();
@@ -19,18 +19,18 @@ const ProductDetail = () => {
   const navigate = useNavigate();
 
   const addItemToCart = () => {
-    if (size === "") {
+    if(size === ""){
       setSizeError(true);
       return;
     }
-    if (!user) {
+    if(!user){
       navigate("/login");
     }
-    dispatch(addToCart({ id, size }));
+    dispatch(addToCart({id,size}));
   };
   const selectSize = (value) => {
     setSize(value);
-    if (sizeError) setSizeError(false);
+    if(sizeError) setSizeError(false);
   };
 
   useEffect(() => {
@@ -51,67 +51,55 @@ const ProductDetail = () => {
     );
   return (
     <Container className="product-detail-card">
-      {loading ? ( // 로딩 중일 때 로딩 스피너 표시
-        <LoadingSpinner />
-      ) : (
-        <Row>
-          <Col sm={6}>
-            <img src={selectedProduct.image} className="w-100" alt="image" />
-          </Col>
-          <Col className="product-info-area" sm={6}>
-            <div className="product-info">{selectedProduct.name}</div>
-            <div className="product-info">
-              ₩ {currencyFormat(selectedProduct.price)}
-            </div>
-            <div className="product-info">{selectedProduct.description}</div>
+      <Row>
+        <Col sm={6}>
+          <img src={selectedProduct.image} className="w-100" alt="image" />
+        </Col>
+        <Col className="product-info-area" sm={6}>
+          <div className="product-info">{selectedProduct.name}</div>
+          <div className="product-info">
+            ₩ {currencyFormat(selectedProduct.price)}
+          </div>
+          <div className="product-info">{selectedProduct.description}</div>
 
-            <Dropdown
-              className="drop-down size-drop-down"
-              title={size}
+          <Dropdown
+            className="drop-down size-drop-down"
+            title={size}
+            align="start"
+            onSelect={(value) => selectSize(value)}
+          >
+            <Dropdown.Toggle
+              className="size-drop-down"
+              variant={sizeError ? "outline-danger" : "outline-dark"}
+              id="dropdown-basic"
               align="start"
-              onSelect={(value) => selectSize(value)}
             >
-              <Dropdown.Toggle
-                className="size-drop-down"
-                variant={sizeError ? "outline-danger" : "outline-dark"}
-                id="dropdown-basic"
-                align="start"
-              >
-                {size === "" ? "사이즈 선택" : size.toUpperCase()}
-              </Dropdown.Toggle>
+              {size === "" ? "사이즈 선택" : size.toUpperCase()}
+            </Dropdown.Toggle>
 
-              <Dropdown.Menu className="size-drop-down">
-                {Object.keys(selectedProduct.stock).length > 0 &&
-                  Object.keys(selectedProduct.stock).map((item, index) =>
-                    selectedProduct.stock[item] > 0 ? (
-                      <Dropdown.Item eventKey={item} key={index}>
-                        {item.toUpperCase()}
-                      </Dropdown.Item>
-                    ) : (
-                      <Dropdown.Item
-                        eventKey={item}
-                        disabled={true}
-                        key={index}
-                      >
-                        {item.toUpperCase()}
-                      </Dropdown.Item>
-                    )
-                  )}
-              </Dropdown.Menu>
-            </Dropdown>
-            <div className="warning-message">
-              {sizeError && "사이즈를 선택해주세요."}
-            </div>
-            <Button
-              variant="dark"
-              className="add-button"
-              onClick={addItemToCart}
-            >
-              추가
-            </Button>
-          </Col>
-        </Row>
-      )}
+            <Dropdown.Menu className="size-drop-down">
+              {Object.keys(selectedProduct.stock).length > 0 &&
+                Object.keys(selectedProduct.stock).map((item, index) =>
+                  selectedProduct.stock[item] > 0 ? (
+                    <Dropdown.Item eventKey={item} key={index}>
+                      {item.toUpperCase()}
+                    </Dropdown.Item>
+                  ) : (
+                    <Dropdown.Item eventKey={item} disabled={true} key={index}>
+                      {item.toUpperCase()}
+                    </Dropdown.Item>
+                  )
+                )}
+            </Dropdown.Menu>
+          </Dropdown>
+          <div className="warning-message">
+            {sizeError && "사이즈를 선택해주세요."}
+          </div>
+          <Button variant="dark" className="add-button" onClick={addItemToCart}>
+            추가
+          </Button>
+        </Col>
+      </Row>
     </Container>
   );
 };
