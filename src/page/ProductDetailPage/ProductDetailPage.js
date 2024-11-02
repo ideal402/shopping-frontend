@@ -12,7 +12,7 @@ import LoadingSpinner from "../../common/component/LoadingSpinner";
 const ProductDetail = () => {
   const dispatch = useDispatch();
   const { selectedProduct, loading } = useSelector((state) => state.product);
-  const {cartLoading} = useSelector((state) => state.cart.loading);
+  const cartLoading = useSelector((state) => state.cart.loading);
   const [size, setSize] = useState("");
   const { id } = useParams();
   const [sizeError, setSizeError] = useState(false);
