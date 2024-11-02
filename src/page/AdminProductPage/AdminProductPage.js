@@ -75,7 +75,7 @@ const AdminProductPage = () => {
       <Container>
         {loading ? ( // 로딩 상태에 따른 조건부 렌더링
           <LoadingSpinner />
-        ) : (
+        ) : (<></>)}
           <>
             <div className="mt-2">
               <SearchBox
@@ -117,7 +117,6 @@ const AdminProductPage = () => {
               className="display-center list-style-none"
             />
           </>
-        )}
       </Container>
 
       <NewItemDialog
