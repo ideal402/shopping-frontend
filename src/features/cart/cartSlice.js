@@ -84,7 +84,7 @@ export const updateQty = createAsyncThunk(
     try {
       const response = await api.put(`/cart/${id}`,{value:value});
 
-      if (response.state !== 200) throw new Error(response.error);
+      if (response.status !== 200) throw new Error(response.error);
       
       return response.data.data;
 
