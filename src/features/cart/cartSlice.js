@@ -61,7 +61,6 @@ export const deleteCartItem = createAsyncThunk(
     try {
       const response = await api.delete(`/cart/${id}`);
 
-      console.log("🚀 ~ response:", response)
       if (response.status !== 200) throw new Error(response.error);
 
       dispatch(
@@ -71,7 +70,8 @@ export const deleteCartItem = createAsyncThunk(
         })
       );
 
-      return response.data;
+      dispatch(getCartList());  
+      
     } catch (error) {
       return rejectWithValue(error.error);
     }
