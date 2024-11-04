@@ -17,7 +17,7 @@ const CartPage = () => {
 
   return (
     <Container>
-      {loading?(<LoadingSpinner/>):(<></>)}
+      {/* {loading?(<LoadingSpinner/>):(<></>)} */}
       <Row>
         <Col xs={12} md={7}>
           {cartList.length > 0 ? (
