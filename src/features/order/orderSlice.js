@@ -27,7 +27,8 @@ export const createOrder = createAsyncThunk(
       dispatch(
         showToastMessage({ message: "주문에 성공했습니다.", status: "success" })
       );
-
+      dispatch(getCartQty());
+      
       return response.data.data;
     } catch (error) {
       dispatch(
