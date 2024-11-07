@@ -59,6 +59,7 @@ const AdminOrderPage = () => {
 
   const handleClose = () => {
     setOpen(false);
+    setSearchQuery({...searchQuery, page: 1})
   };
 
   return (
