@@ -18,10 +18,8 @@ export const createOrder = createAsyncThunk(
   "order/createOrder",
   async (payload, { dispatch, rejectWithValue }) => {
     try {
-      console.log("🚀 ~ payload:", payload)
 
       const response = await api.post("/order", payload);
-      console.log("🚀 ~ response:", response)
       if (response.status !== 200) throw new Error(response.error);
 
       dispatch(
@@ -44,7 +42,16 @@ export const createOrder = createAsyncThunk(
 
 export const getOrder = createAsyncThunk(
   "order/getOrder",
-  async (_, { rejectWithValue, dispatch }) => {}
+  async (_, { rejectWithValue, dispatch }) => {
+    try {
+      const response = await api.get("/order")
+      console.log("🚀 ~ response:", response.data.data)
+      if (response.status !== 200) throw new Error(response.error);
+      return response.data.data
+    } catch (error) {
+      return rejectWithValue(error.error)
+    }
+  }
 );
 
 export const getOrderList = createAsyncThunk(
@@ -79,6 +86,18 @@ const orderSlice = createSlice({
     .addCase(createOrder.rejected, (state, action)=>{
       state.loading = false;
       state.error = action.payload
+    })
+    .addCase(getOrder.pending, (state)=>{
+      state.loading = true;
+    })
+    .addCase(getOrder.fulfilled, (state,action)=>{
+      state.loading = true;
+      state.error = "";
+      state.orderList = action.payload;
+    })
+    .addCase(getOrder.rejected, (state,action)=>{
+      state.loading = true;
+      state.error = action.payload;
     })
     ;
   },
