@@ -11,6 +11,7 @@ const initialState = {
   error: "",
   loading: false,
   totalPageNum: 1,
+  page:1
 };
 
 // Async thunks
@@ -56,9 +57,12 @@ export const getOrder = createAsyncThunk(
 export const getOrderList = createAsyncThunk(
   "order/getOrderList",
   async (query, { rejectWithValue, dispatch }) => {
+    console.log("🚀 ~ query:", query)
     try {
       const response = await api.get("/order", { params: { ...query } })
       if (response.status !== 200) throw new Error(response.error);
+      dispatch(setPage(query.page))
+      dispatch(setOrderNum(query.orderNum))
       return response.data
     } catch (error) {
       return rejectWithValue(error.error)
@@ -68,7 +72,7 @@ export const getOrderList = createAsyncThunk(
 
 export const updateOrder = createAsyncThunk(
   "order/updateOrder",
-  async ({ id, status }, { dispatch, rejectWithValue }) => {
+  async ({ id, status }, { dispatch, rejectWithValue, getState }) => {
     try {
       const response = await api.put(`/order/${id}`, {status:status})
       console.log("🚀 ~ response:", response)
@@ -77,8 +81,9 @@ export const updateOrder = createAsyncThunk(
       dispatch(
         showToastMessage({ message: "주문 수정 성공", status: "success" })
       );
+      const { page, orderNum } = getState().order;
 
-      dispatch(getOrderList({ page: 1 }))
+      dispatch(getOrderList({ page, orderNum}))
 
     } catch (error) {
       dispatch(
@@ -96,6 +101,12 @@ const orderSlice = createSlice({
   reducers: {
     setSelectedOrder: (state, action) => {
       state.selectedOrder = action.payload;
+    },
+    setPage: (state, action) => { // 페이지 번호 업데이트 액션
+      state.page = action.payload;
+    },
+    setOrderNum: (state, action) => { // 주문 번호 업데이트 액션
+      state.orderNum = action.payload;
     },
   },
   extraReducers: (builder) => {
@@ -152,5 +163,5 @@ const orderSlice = createSlice({
   },
 });
 
-export const { setSelectedOrder } = orderSlice.actions;
+export const { setSelectedOrder, setPage, setOrderNum } = orderSlice.actions;
 export default orderSlice.reducer;
