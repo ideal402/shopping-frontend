@@ -72,7 +72,7 @@ export const updateOrder = createAsyncThunk(
   "order/updateOrder",
   async ({ id, status }, { dispatch, rejectWithValue }) => {
     try {
-      const response = await api.put("/order", {orderId:id, status:status})
+      const response = await api.put(`/order/${id}`, {status:status})
       console.log("🚀 ~ response:", response)
 
       if (response.status !== 200) throw new Error(response.error);
@@ -80,7 +80,8 @@ export const updateOrder = createAsyncThunk(
         showToastMessage({ message: "주문 수정 성공", status: "success" })
       );
 
-
+      dispatch(getOrderList())
+      
     } catch (error) {
       dispatch(
         showToastMessage({ message: "주문 수정 실패", status: "error" })
