@@ -78,13 +78,15 @@ export const updateOrder = createAsyncThunk(
       console.log("🚀 ~ response:", response)
 
       if (response.status !== 200) throw new Error(response.error);
+
+      const { page, orderNum } = getState().order;
+
+      await dispatch(getOrderList({ page, orderNum}))
+      
       dispatch(
         showToastMessage({ message: "주문 수정 성공", status: "success" })
       );
-      const { page, orderNum } = getState().order;
-
-      dispatch(getOrderList({ page, orderNum}))
-
+      
     } catch (error) {
       dispatch(
         showToastMessage({ message: "주문 수정 실패", status: "error" })
