@@ -58,8 +58,6 @@ export const getOrderList = createAsyncThunk(
   async (query, { rejectWithValue, dispatch }) => {
     try {
       const response = await api.get("/order", { params: { ...query } })
-      console.log("🚀 ~ query:", query)
-      console.log("🚀 ~ response:", response.data)
       if (response.status !== 200) throw new Error(response.error);
       return response.data
     } catch (error) {
@@ -80,8 +78,8 @@ export const updateOrder = createAsyncThunk(
         showToastMessage({ message: "주문 수정 성공", status: "success" })
       );
 
-      dispatch(getOrderList())
-      
+      dispatch(getOrderList({ page: 1 }))
+
     } catch (error) {
       dispatch(
         showToastMessage({ message: "주문 수정 실패", status: "error" })
